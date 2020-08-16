@@ -42,9 +42,7 @@ Winning Percentage: 73.8%
 Winning Vote Count: 306,055
 Winning Percentage: 82.8%
 
-## Challenge Overview
-
-
 ## Challenge Summary
+The code used for this audit can be easilty repurposed for other campaign audits. The loops and if statements can be repurposed however the variables may need to be reset for example I added variables for the county data i.e (county_votes).  The logic to iterate throughout the data set was the same I just needed to update the row information or initiate the corresponding variables.  T 
 
 
