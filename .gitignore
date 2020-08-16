@@ -1,108 +1,119 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+# Open the election results and read the file.
+import csv
+import os
+file_to_load = os.path.join("/Users/shalisahills/Desktop/GW Data Analytics Bootcamp/Election_Analysis/analysis/election_results.csv")
+# Create a filename variable to a direct path to the text file & using the with statement open the file as a text
+file_to_save = os.path.join("/Users/shalisahills/Desktop/GW Data Analytics Bootcamp/Election_Analysis/analysis/election_analysis.txt")
+with open(file_to_save, "w") as txt_file:
+    # Write to file
+     txt_file.write("hello World")
 
-# C extensions
-*.so
+# 1. Initialize a total vote counter.
+total_votes = 0
+# Candidate Options
+candidate_options = []
+# 1. Declare the empty dictionary.
+candidate_votes = {}
+# Winning Candidate and Winning Count Tracker
+winning_candidate = ""
+winning_count = 0
+winning_percentage = 0
+# Step 1 Initialize County List
+county_options = []
+#Declare the empty county dictionary
+county_votes = {}
+#Step 2 Initialize Winning County and Winning Count Tracker
+winning_county = ""
+winning_county_count = 0
+winning_county_percentage = 0
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+with open(file_to_load) as election_data:
+    file_reader = csv.reader(election_data)
+    # Read the header row.
+    headers = next(file_reader)
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+    # Print each row in the CSV file.
+    for row in file_reader:
+        # 2. Add to the total vote count.
+        total_votes += 1
+        # Print the candidate name from each row.
+        candidate_name = row[2]
+        # If the candidate does not match any existing candidate...
+        if candidate_name not in candidate_options:
+            # Add it to the list of candidates.
+            candidate_options.append(candidate_name)
+            # 2. Begin tracking that candidate's vote count.
+            candidate_votes[candidate_name] = 0
+        # Add a vote to that candidate's count.
+        candidate_votes[candidate_name] += 1
+        # Step 3 (Challenge) write a script that gets the county name for each row print the county name from each row
+        county_name = row[1]
+        # If the county does not match any existing county
+        if county_name not in county_options:
+            #add it to the list of counties
+            county_options.append(county_name)
+            # Begin Tracking that counties vote count
+            county_votes[county_name] = 0
+        # Add a vote to that counties count
+        county_votes[county_name] += 1
+        
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+# Determine the percentage of votes for each candidate & county by looping through the counts.
+# 1. Iterate through the candidate & county list.
+for candidate_name in candidate_votes:
+    # 2. Retrieve vote count of a candidate 
+    votes = candidate_votes[candidate_name]
+    # 3. Calculate the percentage of votes.
+    vote_percentage = float(votes) / float(total_votes) * 100
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-.python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
+    # Determine winning vote count and candidate
+# votes to the terminal.
+    if (votes > winning_count) and (vote_percentage > winning_percentage):
+         # If true then set winning_count = votes and winning_percent =
+         # vote_percentage.
+         winning_count = votes
+         winning_percentage = vote_percentage
+         # And, set the winning_candidate equal to the candidate's name.
+         winning_candidate = candidate_name
+    print(f"{candidate_name}: {vote_percentage:.1f}% ({votes:,})\n") 
+winning_candidate_summary = (
+    f"-------------------------\n"
+    f"Winner: {winning_candidate}\n"
+    f"Winning Vote Count: {winning_count:,}\n"
+    f"Winning Percentage: {winning_percentage:.1f}%\n"
+    f"-------------------------\n")
+print(winning_candidate_summary)
+candidate_results = (f"{candidate_name:}: {vote_percentage:.1f}% ({votes:,})\n")
+print(candidate_results)
+# To do: print out each counties name, vote count, and percentage of
+for county_name in county_votes:
+    votes = county_votes[county_name]
+    vote_percentage = float(votes) / float(total_votes) * 100
+    print (f"{county_name}: received {vote_percentage}% of the vote.")
+# Determine winning vote count and county
+# votes to the terminal.
+    if (votes > winning_county_count) and (vote_percentage > winning_county_percentage):
+     # If true then set winning_count = votes and winning_percent =
+     # vote_percentage.
+        winning_county_count = votes
+        winning_county_percentage = vote_percentage
+         # And, set the winning_county equal to the counties name.
+        winning_county = county_name
+    print(f"{county_name}: {vote_percentage:.1f}% ({votes:,})\n")
+    county_results = (f"{county_name}: {vote_percentage:.1f}% ({votes:,})\n")
+winning_county_summary = (
+    f"-------------------------\n"
+    f"Winner: {winning_county}\n"
+    f"Winning Vote Count: {winning_county_count:,}\n"
+    f"Winning Percentage: {winning_county_percentage:.1f}%\n"
+    f"-------------------------\n")
+print(winning_county_summary) 
+with open(file_to_save, "w") as txt_file:
+    txt_file.write("Election Results""\n")
+    txt_file.write(candidate_results)
+    txt_file.write(winning_candidate_summary)
+    txt_file.write(county_results)
+    txt_file.write(winning_county_summary)
 .venv
 env/
 venv/
